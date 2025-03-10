@@ -1,0 +1,22 @@
+.Editor {
+    display: flex;
+    gap: 10px;
+}
+
+.Editor input {
+    flex: 1; /* 부모 요소의 범위를 벗어나지 않는 선에서 최대의 크기만큼 늘어난다 */
+
+    padding:15px;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 5px;
+}
+
+.Editor button {
+    cursor: pointer;
+    width: 80px;
+    border:none;
+    border-radius: 5px;
+
+    color:white;
+    background-color: rgb(37, 147, 255);
+}
