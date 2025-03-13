@@ -7,9 +7,23 @@ import New from "./pages/New";
 // 경로 요청에 해당하는 응답페이지 설정가능한
                     // Link, useNavigate 둘다 클라이언트 사이드 렌덜이 방식이다
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
+// 올바르지 않은 경로에 대한 응답
 import Notfound from "./pages/Notfound.jsx";
 
-// 올바르지 않은 경로에 대한 응답
+/**
+ *  이미지는 assets 안에 폰트는 public 안에 넣었다
+ *  vite가 실행하는 이미지 최적화 기능 때문에 구분해서 넣어줫다
+ */
+// util 파일로 이동
+// // 이미지 불러오기
+// import emotion1 from './assets/emotion1.png';
+// import emotion2 from './assets/emotion2.png';
+// import emotion3 from './assets/emotion3.png';
+// import emotion4 from './assets/emotion4.png';
+// import emotion5 from './assets/emotion5.png';
+
+// util 이미지 불러오기
+import { getEmotionImage } from "./util/get-emotion-image.js";
 
 /**
  *  1. "/": 모든 일기를 조회하는 Home 페이지
@@ -44,6 +58,15 @@ function App() {
     return (
         <>
             <div>
+                {/* assets 에서 이미지를 불러올 경우 이미지 최적화가 된다
+                    자동으로 사용자 pc에 캐싱되도록 암호화 설정 된다 (새로고침해도 다시 불러오지 않음) */}
+                <img src={getEmotionImage(1)}/>
+                <img src={getEmotionImage(2)}/>
+                <img src={getEmotionImage(3)}/>
+                <img src={getEmotionImage(4)}/>
+                <img src={getEmotionImage(5)}/>
+            </div>
+            <div>
                 <Link to={"/"}>Home</Link>
                 <Link to={"/new"}>New</Link>
                 <Link to={"/diary"}>Diary</Link>
@@ -65,7 +88,7 @@ function App() {
                 <Route path="*" element={<Notfound />} /> {/* 모든 경로에 대해서 응답 - 엉뚱한 요청에 대한 응답 */}
             </Routes>
         </>
-)
+    )
 }
 
 export default App
