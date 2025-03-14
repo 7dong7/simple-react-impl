@@ -29,20 +29,26 @@ import { getEmotionImage } from "./util/get-emotion-image.js";
 const mockData = [
     {
         id: 1,
-        createDate: new Date().getTime(),
+        createdDate: new Date("2025-03-20").getTime(),
         emotionId: 1,
         content: "1번 일기 내용"
     },
     {
         id: 2,
-        createDate: new Date().getTime(),
+        createdDate: new Date("2025-03-19").getTime(),
         emotionId: 2,
         content: "2번 일기 내용"
+    },
+    {
+        id: 3,
+        createdDate: new Date("2025-02-11").getTime(),
+        emotionId: 3,
+        content: "3번 일기 내용"
     }
 ]
 
-const DiaryStateContext = createContext(); // data context
-const DiaryDispatchContext = createContext(); // 함수 context
+export const DiaryStateContext = createContext(); // data context
+export const DiaryDispatchContext = createContext(); // 함수 context
 
 // === 외부 함수
 function reducer(state, action) {
@@ -60,30 +66,30 @@ function reducer(state, action) {
 
 function App() {
     const [data, dispatch] = useReducer(reducer, mockData); // 함수 외부에서 관리
-    const idRef = useRef(3);
+    const idRef = useRef(4);
     
 // 새로운 일기 추가
-    const onCreate = (createDate, emotionId, content) => {
+    const onCreate = (createdDate, emotionId, content) => {
         console.log("새로운 일기 작성");
         // 새로운 일기를 추가하는 기능
         dispatch({
             type:"CREATE",
             data: {
                 id: idRef.current++,
-                createDate,
+                createdDate,
                 emotionId,
                 content,
             }
         });
     }
 // 기존 일기 수정
-    const onUpdate = (id, createDate, emotionId, content) => {
+    const onUpdate = (id, createdDate, emotionId, content) => {
         console.log("기존 일기 수정");
         dispatch({
             type: "UPDATE",
             data:{
                 id,
-                createDate,
+                createdDate,
                 emotionId,
                 content,
             }
@@ -100,21 +106,6 @@ function App() {
 
     return (
         <>
-            <button onClick={() => {
-                onCreate(new Date().getTime(), 1, "hello")
-            }}>
-                일기 추가 테스트
-            </button>
-            <button onClick={() => {
-                onUpdate(1, new Date().getTime(), 3, "수정된 일기입니다");
-            }}>
-                일기 수정 테스트
-            </button>
-            <button onClick={() => {
-                onDelete(1);
-            }}>
-                일기 삭제 테스트
-            </button>
             <DiaryStateContext.Provider value={data}>
                 <DiaryDispatchContext.Provider value={{
                     onDelete, onUpdate, onCreate
