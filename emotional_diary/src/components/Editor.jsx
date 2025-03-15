@@ -2,7 +2,7 @@ import "./Editor.css";
 import EmotionItem from "./EmotionItem.jsx";
 import Button from "./Button.jsx";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // 감정 정보 리스트
@@ -46,7 +46,7 @@ const getStringedDate = (targetDate) => {
     return `${year}-${month}-${date}`;
 }
 
-const Editor = ({onSubmit}) => {
+const Editor = ({initData, onSubmit}) => {
 
     const [input, setInput] = useState({
         createdDate: new Date(),
@@ -56,6 +56,17 @@ const Editor = ({onSubmit}) => {
     
     // 내비게이션
     const nav = useNavigate();
+
+    // 초기 데이터가 있는 경우 (수정하기)
+    useEffect(() => {
+        if (initData) {
+            setInput({
+                ...initData,
+                createdDate: new Date(Number(initData.createdDate)),
+            })
+        }
+    }, [initData]);
+
 
     // 날짜 변경 메소드
     const onChangeInput = (e) => {
