@@ -5,46 +5,52 @@ import Button from "./Button.jsx";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// 이미지 정보
+import { emotionList} from "../util/constants.js";
+
+// 유틸
+import { getStringedDate } from "../util/get-stringed-date.js"
+
 // 감정 정보 리스트
-const emotionList = [
-    {
-        emotionId:1,
-        emotionName: "완전 좋음"
-    },
-    {
-        emotionId:2,
-        emotionName: "좋음"
-    },
-    {
-        emotionId:3,
-        emotionName: "그러저럭"
-    },
-    {
-        emotionId:4,
-        emotionName: "나쁨"
-    },
-    {
-        emotionId:5,
-        emotionName: "끔찍함"
-    }
-];
+// const emotionList = [
+//     {
+//         emotionId:1,
+//         emotionName: "완전 좋음"
+//     },
+//     {
+//         emotionId:2,
+//         emotionName: "좋음"
+//     },
+//     {
+//         emotionId:3,
+//         emotionName: "그러저럭"
+//     },
+//     {
+//         emotionId:4,
+//         emotionName: "나쁨"
+//     },
+//     {
+//         emotionId:5,
+//         emotionName: "끔찍함"
+//     }
+// ];
 
-// 날짜를 문자열로 변경
-const getStringedDate = (targetDate) => {
-    // 받은 날짜를 YYYY-MM-DD 형태로 만들어 준다 (09 09)
-    let year = targetDate.getFullYear();
-    let month = targetDate.getMonth()+1;
-    let date = targetDate.getDate();
-
-    if (month < 10) {
-        month = `0${month}`;
-    }
-    if (date < 10) {
-        date = `0${date}`;
-    }
-
-    return `${year}-${month}-${date}`;
-}
+// // 날짜를 문자열로 변경
+// const getStringedDate = (targetDate) => {
+//     // 받은 날짜를 YYYY-MM-DD 형태로 만들어 준다 (09 09)
+//     let year = targetDate.getFullYear();
+//     let month = targetDate.getMonth()+1;
+//     let date = targetDate.getDate();
+//
+//     if (month < 10) {
+//         month = `0${month}`;
+//     }
+//     if (date < 10) {
+//         date = `0${date}`;
+//     }
+//
+//     return `${year}-${month}-${date}`;
+// }
 
 const Editor = ({initData, onSubmit}) => {
 

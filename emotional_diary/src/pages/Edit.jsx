@@ -9,29 +9,35 @@ import Editor from "../components/Editor.jsx";
 import { useContext, useEffect, useState } from "react";
 import { DiaryDispatchContext, DiaryStateContext } from "../App.jsx";
 
+// 커스텀 훅
+import useDiary from "../hooks/useDiary.jsx";
+
+
+
 
 const Edit = () => {
     const params = useParams(); //
     const nav = useNavigate();
     const {onDelete,onUpdate} = useContext(DiaryDispatchContext);
-    const data = useContext(DiaryStateContext);
-    const [curDiaryItem, setCurDiaryItem] = useState();
 
 
-    // nav 기능 사용
-    useEffect(() => {
-        // 일기 정보 조회
-        const currentDiaryItem = data.find((item) => String(item.id) === String(params.id));
-
-        // 일기 정보가 없는 경우 ( 조작된 접근 )
-        if (!currentDiaryItem) {
-            window.alert("존재하지 않는 일기입니다");
-            nav("/", {replace: true}); // 컴포넌트가 생성되기 전에는 nav 가 동작할 수없다 (mount 되기 전에 동작X)
-        }
-
-        setCurDiaryItem(currentDiaryItem); // state 에 보관하도록 한다
-    }, [params.id]);
-
+    // const data = useContext(DiaryStateContext);
+    // const [curDiaryItem, setCurDiaryItem] = useState();
+    //
+    // // nav 기능 사용
+    // useEffect(() => {
+    //     // 일기 정보 조회
+    //     const currentDiaryItem = data.find((item) => String(item.id) === String(params.id));
+    //
+    //     // 일기 정보가 없는 경우 ( 조작된 접근 )
+    //     if (!currentDiaryItem) {
+    //         window.alert("존재하지 않는 일기입니다");
+    //         nav("/", {replace: true}); // 컴포넌트가 생성되기 전에는 nav 가 동작할 수없다 (mount 되기 전에 동작X)
+    //     }
+    //
+    //     setCurDiaryItem(currentDiaryItem); // state 에 보관하도록 한다
+    // }, [params.id]);
+    const curDiaryItem = useDiary(params.id);
     
     // 일기장 삭제 기능
     const onClickDelete = () => {
