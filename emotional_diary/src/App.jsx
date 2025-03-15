@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import './App.css'
 
 // === pages
@@ -26,47 +26,95 @@ import { getEmotionImage } from "./util/get-emotion-image.js";
 
 
 // 초기 샘플링 데이터 추가하기 - 임시 일기 데이터
-const mockData = [
-    {
-        id: 1,
-        createdDate: new Date("2025-03-20").getTime(),
-        emotionId: 1,
-        content: "1번 일기 내용"
-    },
-    {
-        id: 2,
-        createdDate: new Date("2025-03-19").getTime(),
-        emotionId: 2,
-        content: "2번 일기 내용"
-    },
-    {
-        id: 3,
-        createdDate: new Date("2025-02-11").getTime(),
-        emotionId: 3,
-        content: "3번 일기 내용"
-    }
-]
+// const mockData = [
+//     {
+//         id: 1,
+//         createdDate: new Date("2025-03-20").getTime(),
+//         emotionId: 1,
+//         content: "1번 일기 내용"
+//     },
+//     {
+//         id: 2,
+//         createdDate: new Date("2025-03-19").getTime(),
+//         emotionId: 2,
+//         content: "2번 일기 내용"
+//     },
+//     {
+//         id: 3,
+//         createdDate: new Date("2025-02-11").getTime(),
+//         emotionId: 3,
+//         content: "3번 일기 내용"
+//     }
+// ]
 
 export const DiaryStateContext = createContext(); // data context
 export const DiaryDispatchContext = createContext(); // 함수 context
 
-// === 외부 함수
+// === 외부 함수 관리
 function reducer(state, action) {
+    // 로컬 스토리지를 활용한 데이터 저장 방법
+    let nextState;
+    
     switch (action.type) {
-        case 'CREATE':
-            return [action.data, ...state];
-        case 'UPDATE':
-            return state.map((item)=>
-                                String(item.id) === String(action.data.id) ? action.data : item)
-        case 'DELETE':
+        case 'INIT':
+            return action.data; // 바로 리턴하는 경우 localStorage 에 저장할 이유가 없는 경우
+        case 'CREATE': {
+            nextState = [action.data, ...state]
+            break;
+        }
+        case 'UPDATE': {
+            nextState = state.map((item) =>
+                String(item.id) === String(action.data.id) ? action.data : item);
+            break;
+        }
+        case 'DELETE': {
                                     // 삭제하고자 하는 id와 action.id 가 같으면 제외
-            return state.filter((item) => String(item.id) !== String(action.id));
+            nextState = state.filter((item) => String(item.id) !== String(action.id));
+            break;
+        }
+        default:
+            return state;
     }
+    localStorage.setItem("diary", JSON.stringify(nextState));
+    return nextState;
 }
 
+// 랜더링의 순서에 따라서 오류가 발생할 수 있다 (로딩기능 필요)
 function App() {
-    const [data, dispatch] = useReducer(reducer, mockData); // 함수 외부에서 관리
-    const idRef = useRef(4);
+    // 로딩 상태
+    const [isLoading, setIsLoading] = useState(true);
+    // const [data, dispatch] = useReducer(reducer, mockData); // 함수 외부에서 관리
+    const [data, dispatch] = useReducer(reducer, []); // 초기값 없애기
+    const idRef = useRef(0);
+
+    useEffect(() => {
+        const storedData = localStorage.getItem("diary");
+
+        if(!storedData){ // null 오류 발생
+            setIsLoading(false);
+            return;
+        }
+        const parsedData = JSON.parse(storedData);
+
+        if (!Array.isArray(parsedData)) { // 배열이 아닌 경우 리턴
+            setIsLoading(false);
+            return;
+        }
+
+        let maxId = 0;
+        parsedData.forEach((item)=>{
+            if (Number(item.id) > maxId) {
+                maxId = Number(item.id); // 일기 중에 가장 높은 id값을 사용
+            }
+        })
+        idRef.current = maxId + 1;
+
+        dispatch({
+            type: "INIT",
+            data: parsedData
+        });
+        setIsLoading(false);
+    }, []); // 빈 배열 컴포넌트가 마운트(생성) 되었을 경우에 한번 호출
     
 // 새로운 일기 추가
     const onCreate = (createdDate, emotionId, content) => {
@@ -102,6 +150,11 @@ function App() {
             type: "DELETE",
             id,
         })
+    }
+
+    // 데이터 로딩 설정
+    if (isLoading) {
+        return <div>데이터 로딩중 입니다...</div>
     }
 
     return (
