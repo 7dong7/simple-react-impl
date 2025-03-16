@@ -6,6 +6,9 @@ import DiaryList from "../components/DiaryList.jsx";
 // hook
 import { useState, useContext } from "react";
 
+// 커스텀 훅
+import usePageTitle from "../hooks/usePageTitle.jsx"; // 탭 이름 변경
+
 // context
 import { DiaryStateContext } from "../App.jsx";
 
@@ -25,6 +28,8 @@ const getMonthlyData = (pivotDate, data) => {
 const Home = () => {
     const data = useContext(DiaryStateContext);
     const [pivotDate, setPivotDate] = useState(new Date()); // 날짜 state
+
+    usePageTitle("감정 일기장");
 
     // 월별로 날짜를 이동시키는 기능
     const onIncreaseMonth = () => {

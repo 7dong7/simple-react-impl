@@ -7,6 +7,7 @@ import Viewer from "../components/Viewer.jsx";
 
 // 커스텀 훅
 import useDiary from "../hooks/useDiary.jsx";
+import usePageTitle from "../hooks/usePageTitle.jsx"; // 탭 이름 변경
 
 // 유틸 함수
 import { getStringedDate } from "../util/get-stringed-date.js";
@@ -15,6 +16,9 @@ import { getStringedDate } from "../util/get-stringed-date.js";
 const Diary = () => {
     const params = useParams(); // 동적 경로 id 설정
     const nav = useNavigate();
+
+    usePageTitle(`${params.id}번 일기`);
+
 
     const curDiaryItem = useDiary(params.id);
 

@@ -10,7 +10,8 @@ import { useContext, useEffect, useState } from "react";
 import { DiaryDispatchContext, DiaryStateContext } from "../App.jsx";
 
 // 커스텀 훅
-import useDiary from "../hooks/useDiary.jsx";
+import useDiary from "../hooks/useDiary.jsx"; // 일기 작성
+import usePageTitle from "../hooks/usePageTitle.jsx"; // 브라우저 탭 이름 변경 훅
 
 
 
@@ -20,6 +21,7 @@ const Edit = () => {
     const nav = useNavigate();
     const {onDelete,onUpdate} = useContext(DiaryDispatchContext);
 
+    usePageTitle(`${params.id}번 일기 수정`); // 일기 제목 변경
 
     // const data = useContext(DiaryStateContext);
     // const [curDiaryItem, setCurDiaryItem] = useState();
